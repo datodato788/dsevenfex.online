@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Dato Gogia</title>
+    <link rel="shortcut icon" href="https://github.com/datodato788.png" type="image/x-icon">
+    <style>
+      /* Dark Theme Variables */
+      :root {
+        --bg-color: #121212;
+        --text-color: #ededed;
+        --text-muted: #a0a0a0;
+        --accent-color: #888888;
+        --link-hover: #ffffff;
+        --border-color: #2a2a2a;
+        --card-bg: #181818;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+      }
+
+      .profile-pic {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--border-color);
+      }
+
+      .header-text h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0 0 0.2rem 0;
+        letter-spacing: -0.5px;
+        color: var(--text-color);
+      }
+
+      .header-text .subtitle {
+        color: var(--accent-color);
+        font-size: 1.05rem;
+        margin: 0;
+      }
+
+      /* Sections */
+      section {
+        margin-bottom: 4rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0.5rem;
+      }
+
+      p {
+        margin-bottom: 1rem;
+        color: var(--text-muted);
+      }
+
+      /* Dynamic Projects List */
+      .project-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .project-item {
+        padding: 1.2rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        transition: border-color 0.2s ease;
+      }
+
+      .project-item:hover {
+        border-color: #555;
+      }
+
+      .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .project-header h3 {
+        font-size: 1.2rem;
+        margin: 0;
+      }
+
+      .project-header h3 a {
+        color: var(--text-color);
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .project-header h3 a:hover {
+        color: var(--link-hover);
+        text-decoration: underline;
+      }
+
+      .language-tag {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        background-color: #2a2a2a;
+        color: #ccc;
+        border: 1px solid #333;
+      }
+
+      .project-item p {
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      /* Loading Text */
+      .loading {
+        color: var(--accent-color);
+        font-size: 0.9rem;
+        font-style: italic;
+      }
+
+      /* Hardware Image Gallery (Scrollable) */
+      .gallery-wrapper {
+        position: relative;
+        width: 100%;
+      }
+
+      .gallery-track {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        scroll-snap-type: none;
+        padding-bottom: 1rem;
+        /* Scrollbar-ის დამალვა სუფთა დიზაინისთვის */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .gallery-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      .gallery-item {
+        min-width: 80%; /* მობილურზე აჩვენებს 80%-ს, რომ მიხვდეს ადამიანი დასასქროლი რომაა */
+        scroll-snap-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      @media (min-width: 600px) {
+        .gallery-item {
+          min-width: 65%; /* კომპიუტერზე ოდნავ პატარა იქნება */
+        }
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background-color: var(--card-bg);
+      }
+
+      .gallery-caption {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-align: center;
+        margin: 0;
+      }
+
+      /* Links */
+      a {
+        color: var(--accent-color);
+        text-decoration: none;
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+        padding-bottom: 2px;
+      }
+
+      a:hover {
+        color: var(--link-hover);
+        border-bottom-color: var(--link-hover);
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap; /* ტელეფონზე რომ კარგად ჩაეტიოს ლინკები */
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 5rem;
+        padding-top: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--accent-color);
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--border-color);
+      }
+
+      @media (max-width: 500px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+      .gallery-track {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        scroll-snap-type: none;
+        padding-bottom: 1.5rem; /* ცოტა მეტი ადგილი სქროლისთვის */
+
+        /* Firefox-ისთვის */
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-color) var(--bg-color);
+      }
+
+      /* Chrome, Edge და Safari ბრაუზერებისთვის ვალამაზებთ სქროლს */
+      .gallery-track::-webkit-scrollbar {
+        height: 8px; /* სქროლის სისქე */
+      }
+
+      .gallery-track::-webkit-scrollbar-track {
+        background: var(--bg-color);
+        border-radius: 4px;
+      }
+
+      .gallery-track::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 4px;
+      }
+
+      .gallery-track::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      /* --- Enhanced Hardware Gallery --- */
+      #hardware-showcase {
+        margin-top: 2rem;
+      }
+      .gallery-track {
+        scroll-behavior: smooth;
+        cursor: grab;
+        padding: 1rem 0 1.2rem;
+      }
+      .gallery-track:active {
+        cursor: grabbing;
+      }
+      .gallery-item {
+        min-width: 340px;
+        background: #1b1b1b;
+        border: 1px solid #333;
+        border-radius: 16px;
+        padding: 12px;
+        transition: 0.3s;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+      .gallery-item:hover {
+        transform: translateY(-6px);
+        border-color: #666;
+      }
+      .gallery-item img {
+        height: 320px;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <img
+          src="https://github.com/datodato788.png"
+          alt="Dato Gogia"
+          class="profile-pic"
+        />
+        <div class="header-text">
+          <h1>Dato Gogia</h1>
+          <p class="subtitle">
+            Software Developer • Cybersecurity & Hardware Enthusiast
+          </p>
+        </div>
+      </header>
+
+      <main>
+        <section id="about">
+          <h2>About</h2>
+          <p>
+            I work with Python, JavaScript, Bash, and C. I design and write
+            scripts, and I'm deeply passionate about network analysis,
+            penetration testing methodologies, and custom DIY hardware (ESP32)
+            configuration. I also focus on building local network discovery
+            tools and database management systems.
+          </p>
+        </section>
+
+        <section id="projects">
+          <h2>GitHub Projects</h2>
+          <div id="github-projects" class="project-list">
+            <p class="loading">Loading projects from GitHub...</p>
+          </div>
+        </section>
+
+        <section id="hardware-showcase">
+          <h2>Hardware & ESP32 Projects</h2>
+          <div class="gallery-wrapper">
+            <div class="gallery-track" id="gallery-track">
+              <!-- JS ავტომატურად ჩაყრის ფოტოებს -->
+            </div>
+          </div>
+        </section>
+
+        <section id="contact">
+          <h2>Contact</h2>
+          <div class="social-links">
+            <a href="https://github.com/datodato788" target="_blank">GitHub</a>
+            <a href="https://github.com/Dsevenfex" target="_blank"
+              >Dsevenfex Org</a
+            >
+            <a href="https://dsevenfex.online" target="_blank">Website</a>
+            <a href="mailto:gogiadato8@gmail.com">Email</a>
+            <a
+              href="https://discord.com/users/1509993795339685949"
+              target="_blank"
+              >Discord</a
+            >
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2026 Dato Gogia.</p>
+        <p>Based in Georgia.</p>
+      </footer>
+    </div>
+
+    <!-- GitHub API Script -->
+    <script>
+      const personalProjects = [
+        // "datodato788/DSGBase"
+      ];
+
+      const orgProjects = [
+        "Dsevenfex/FexCam",
+        "Dsevenfex/FexNetCut",
+        "Dsevenfex/FexNGLSpammer",
+        "Dsevenfex/FexMalwareLite",
+        "Dsevenfex/FexChat",
+        "Dsevenfex/FexPasst",
+      ];
+
+      const allProjects = [...personalProjects, ...orgProjects];
+      const container = document.getElementById("github-projects");
+
+      async function fetchProjects() {
+        try {
+          container.innerHTML = "";
+
+          for (const repo of allProjects) {
+            const response = await fetch(
+              `https://api.github.com/repos/${repo}`,
+            );
+            if (!response.ok) continue;
+
+            const data = await response.json();
+            const projectDiv = document.createElement("div");
+            projectDiv.className = "project-item";
+
+            const description = data.description
+              ? data.description
+              : "No description provided.";
+            const languageTag = data.language
+              ? `<span class="language-tag">${data.language}</span>`
+              : "";
+
+            projectDiv.innerHTML = `
+                        <div class="project-header">
+                            <h3><a href="${data.html_url}" target="_blank">${data.name}</a></h3>
+                            ${languageTag}
+                        </div>
+                        <p>${description}</p>
+                    `;
+
+            container.appendChild(projectDiv);
+          }
+        } catch (error) {
+          container.innerHTML =
+            '<p class="loading">Failed to load projects.</p>';
+          console.error("Error fetching GitHub data:", error);
+        }
+      }
+
+      fetchProjects();
+      document.querySelectorAll("img").forEach((i) => (i.loading = "lazy"));
+      // ჩაწერეთ თქვენი ფოტოების ზუსტი სახელები და აღწერები
+      const track = document.getElementById("gallery-track");
+      let i = 1;
+      const maxLimit = 200; // მაქსიმალური ზღვარი (რომ უსასრულო ლუპში არ შევიდეს)
+
+      function loadImages() {
+        if (i > maxLimit) return;
+
+        const imgPath = `img/image_${i}.jpg`; // ან .png (გააჩნია რა ფორმატია)
+
+        const img = new Image();
+        img.src = imgPath;
+
+        // ვამოწმებთ არსებობს თუ არა ეს ფოტო ფოლდერში
+        img.onload = function () {
+          const item = document.createElement("div");
+          item.className = "gallery-item";
+
+          item.innerHTML = `
+            <img src="${imgPath}" alt="Project Image ${i}">
+            <p class="gallery-caption">image #${i}</p>
+        `;
+
+          track.appendChild(item);
+
+          // ვამოწმებთ მომდევნო ფოტოს
+          i++;
+          loadImages();
+        };
+
+        img.onerror = function () {
+          i++;
+          if (i <= maxLimit) loadImages();
+        };
+      }
+
+      // ვიწყებთ ლუპს
+      loadImages();
+
+      const g = document.getElementById("gallery-track");
+      g.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            g.scrollLeft += e.deltaY;
+          }
+        },
+        { passive: false },
+      );
+      let down = false,
+        sx,
+        sl;
+      g.addEventListener("mousedown", (e) => {
+        down = true;
+        g.classList.add("drag");
+        sx = e.pageX;
+        sl = g.scrollLeft;
+      });
+      window.addEventListener("mouseup", () => (down = false));
+      g.addEventListener("mousemove", (e) => {
+        if (!down) return;
+        e.preventDefault();
+        g.scrollLeft = sl - (e.pageX - sx);
+      });
+    </script>
+  </body>
+</html>
