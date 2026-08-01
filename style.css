@@ -257,13 +257,13 @@ footer {
   line-height: 1.8;
 }
 
-.hl-dev { font-weight: 600; color: #58a6ff; }
-.hl-cyber { font-weight: 600; color: #ff7b72; }
-.hl-py { font-weight: 600; color: #ffd343; }
-.hl-js { font-weight: 600; color: #f1e05a; }
-.hl-bash { font-weight: 600; color: #7ee787; }
-.hl-c { font-weight: 600; color: #a5d6ff; }
-.hl-hw { font-weight: 600; color: #d2a8ff; }
+.hl-dev { font-weight: 600; color: #95ff72; }
+.hl-cyber { font-weight: 600; color: #95ff72; }
+.hl-py { font-weight: 600; color: #f6f6f6; }
+.hl-js { font-weight: 600; color: #f6f6f6;; }
+.hl-bash { font-weight: 600; color: #f6f6f6;; }
+.hl-c { font-weight: 600; color: #f6f6f6;; }
+.hl-hw { font-weight: 600; color: #95ff72; }
 
 .about-text span {
   transition: text-shadow 0.2s ease;
