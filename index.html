@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div id="lightbox" class="lightbox">
+  <span class="close-lightbox">&times;</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
     <div class="container">
       <header>
         <img src="https://github.com/datodato788.png" alt="Dato Gogia" class="profile-pic" />
@@ -67,133 +71,204 @@
       </footer>
     </div>
 
-    <script>
-      const personalProjects = [];
-      const orgProjects = [
-        "Dsevenfex/FexCam",
-        "Dsevenfex/FexNetCut",
-        "Dsevenfex/FexNGLSpammer",
-        "Dsevenfex/FexMalwareLite",
-        "Dsevenfex/FexChat",
-        "Dsevenfex/FexPasst",
-      ];
+ <script>
+const personalProjects = [];
+const orgProjects = [
+  "Dsevenfex/FexCam",
+  "Dsevenfex/FexNetCut",
+  "Dsevenfex/FexNGLSpammer",
+  "Dsevenfex/FexMalwareLite",
+  "Dsevenfex/FexChat",
+  "Dsevenfex/FexPass",
+];
 
-      const allProjects = [...personalProjects, ...orgProjects];
-      const projectContainer = document.getElementById("github-projects");
+const allProjects = [...personalProjects, ...orgProjects];
+const projectContainer = document.getElementById("github-projects");
 
-      async function fetchProjects() {
-        try {
-          projectContainer.innerHTML = "";
-          for (const repo of allProjects) {
-            const response = await fetch(`https://api.github.com/repos/${repo}`);
-            if (!response.ok) continue;
+async function fetchProjects() {
+  try {
+    projectContainer.innerHTML = "";
 
-            const data = await response.json();
-            const projectDiv = document.createElement("div");
-            projectDiv.className = "project-item";
+    for (const repo of allProjects) {
+      const response = await fetch(`https://api.github.com/repos/${repo}`);
 
-            const description = data.description ? data.description : "No description provided.";
-            const languageTag = data.language ? `<span class="language-tag">${data.language}</span>` : "";
+      if (!response.ok) continue;
 
-            projectDiv.innerHTML = `
-                <div class="project-header">
-                    <h3><a href="${data.html_url}" target="_blank">${data.name}</a></h3>
-                    ${languageTag}
-                </div>
-                <p>${description}</p>
-            `;
-            projectContainer.appendChild(projectDiv);
-          }
-        } catch (error) {
-          projectContainer.innerHTML = '<p class="loading" style="color:red;">Failed to load projects.</p>';
-        }
-      }
-      
-      fetchProjects();
+      const data = await response.json();
 
-      const galleryContainer = document.getElementById("gallery-container");
+      const projectDiv = document.createElement("div");
+      projectDiv.className = "project-item";
 
-      const categories = [
-        { name: "M5 Stick", folder: "img1" },
-        { name: "ESP32 Marauder", folder: "img2" },
-        { name: "nRF BOX", folder: "img3" },
-        { name: "TTGO T-Display", folder: "img4" },
-      ];
+      const description = data.description || "No description provided.";
+      const languageTag = data.language
+        ? `<span class="language-tag">${data.language}</span>`
+        : "";
 
-      const maxImagesPerFolder = 15;
-      const possibleExtensions = ["jpg", "jpeg", "png", "webp"];
+      projectDiv.innerHTML = `
+        <div class="project-header">
+          <h3>
+            <a href="${data.html_url}" target="_blank">
+              ${data.name}
+            </a>
+          </h3>
+          ${languageTag}
+        </div>
 
-      function loadImageWithFallback(basePath, extensions) {
-        return new Promise((resolve) => {
-          let idx = 0;
-          function tryNext() {
-            if (idx >= extensions.length) {
-              resolve(null);
-              return;
-            }
-            const path = `${basePath}.${extensions[idx]}`;
-            idx++;
-            const img = new Image();
-            img.onload = () => resolve({ img, path });
-            img.onerror = tryNext;
-            img.src = path;
-          }
-          tryNext();
-        });
-      }
+        <p>${description}</p>
+      `;
 
-      async function buildCategory(category) {
-        const title = document.createElement("h3");
-        title.className = "category-title";
-        title.textContent = category.name;
-        galleryContainer.appendChild(title);
+      projectContainer.appendChild(projectDiv);
+    }
+  } catch (error) {
+    projectContainer.innerHTML =
+      '<p class="loading" style="color:red;">Failed to load projects.</p>';
+  }
+}
 
-        const grid = document.createElement("div");
-        grid.className = "gallery-grid";
-        galleryContainer.appendChild(grid);
+fetchProjects();
 
-        const slots = Array.from({ length: maxImagesPerFolder }, (_, i) => i + 1);
+/* -------------------- GALLERY -------------------- */
 
-        const results = await Promise.all(
-          slots.map(async (i) => {
-            const basePath = `${category.folder}/image_${i}`;
-            const result = await loadImageWithFallback(basePath, possibleExtensions);
-            return { i, result };
-          })
-        );
+const galleryContainer = document.getElementById("gallery-container");
 
-        let foundCount = 0;
+const categories = [
+  { name: "BLE && WIFI Jammer", folder: "img5" },
+  { name: "M5 Stick", folder: "img1" },
+  { name: "ESP32 Marauder", folder: "img2" },
+  { name: "nRF BOX", folder: "img3" },
+  { name: "TTGO T-Display", folder: "img4" },
+];
 
-        results
-          .sort((a, b) => a.i - b.i)
-          .forEach(({ i, result }) => {
-            if (!result) return;
+const maxImagesPerFolder = 15;
+const possibleExtensions = ["jpg", "jpeg", "png", "webp"];
 
-            foundCount++;
-            const { img } = result;
-            img.alt = `${category.name} Showcase #${i}`;
+/* -------------------- LIGHTBOX -------------------- */
 
-            const caption = document.createElement("div");
-            caption.className = "gallery-caption";
-            caption.textContent = `${category.name} #${i}`;
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const closeLightbox = document.querySelector(".close-lightbox");
 
-            const item = document.createElement("div");
-            item.className = "gallery-item loaded";
-            item.appendChild(img);
-            item.appendChild(caption);
+function openLightbox(src) {
+  lightboxImg.src = src;
+  lightbox.classList.add("show");
+  document.body.style.overflow = "hidden";
+}
 
-            grid.appendChild(item);
-          });
+function closeBox() {
+  lightbox.classList.remove("show");
+  document.body.style.overflow = "";
+}
 
-        if (foundCount === 0) {
-          const empty = document.createElement("p");
-          empty.className = "loading gallery-empty";
-          empty.textContent = `ამ კატეგორიაში ფოტო ვერ მოიძებნა (საქაღალდე: "${category.folder}/"). გადაამოწმეთ ფაილების სახელები (image_1, image_2, ...) და გაფართოება.`;
-          grid.appendChild(empty);
-        }
+closeLightbox.addEventListener("click", closeBox);
+
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox) {
+    closeBox();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeBox();
+  }
+});
+
+/* -------------------- IMAGE LOADER -------------------- */
+
+function loadImageWithFallback(basePath, extensions) {
+  return new Promise((resolve) => {
+    let index = 0;
+
+    function tryNext() {
+      if (index >= extensions.length) {
+        resolve(null);
+        return;
       }
 
-      categories.forEach(buildCategory);
-    </script>
+      const img = new Image();
+      const path = `${basePath}.${extensions[index]}`;
+
+      index++;
+
+      img.onload = () => resolve({ img, path });
+      img.onerror = tryNext;
+
+      img.src = path;
+    }
+
+    tryNext();
+  });
+}
+
+/* -------------------- BUILD CATEGORY -------------------- */
+
+async function buildCategory(category) {
+  const title = document.createElement("h3");
+  title.className = "category-title";
+  title.textContent = category.name;
+  galleryContainer.appendChild(title);
+
+  const grid = document.createElement("div");
+  grid.className = "gallery-grid";
+  galleryContainer.appendChild(grid);
+
+  const slots = Array.from(
+    { length: maxImagesPerFolder },
+    (_, i) => i + 1
+  );
+
+  const results = await Promise.all(
+    slots.map(async (i) => {
+      const basePath = `${category.folder}/image_${i}`;
+      const result = await loadImageWithFallback(
+        basePath,
+        possibleExtensions
+      );
+
+      return { i, result };
+    })
+  );
+
+  let foundCount = 0;
+
+  results
+    .sort((a, b) => a.i - b.i)
+    .forEach(({ i, result }) => {
+      if (!result) return;
+
+      foundCount++;
+
+      const { img } = result;
+
+      img.alt = `${category.name} Showcase #${i}`;
+      img.loading = "lazy";
+
+      img.addEventListener("click", () => {
+        openLightbox(img.src);
+      });
+
+      const caption = document.createElement("div");
+      caption.className = "gallery-caption";
+      caption.textContent = `${category.name} #${i}`;
+
+      const item = document.createElement("div");
+      item.className = "gallery-item loaded";
+
+      item.appendChild(img);
+      item.appendChild(caption);
+
+      grid.appendChild(item);
+    });
+
+  if (foundCount === 0) {
+    const empty = document.createElement("p");
+    empty.className = "loading gallery-empty";
+    empty.textContent = "Photo 404";
+    grid.appendChild(empty);
+  }
+}
+
+categories.forEach(buildCategory);
+</script>
   </body>
 </html>
